@@ -26,80 +26,89 @@ const employees = ref([
   payNalog: 425,
 },
 ]);
+const id = ref('');
 const name = ref('');
 const date = ref('');
-const day = ref('');
-const allmoney = ref('');
- 
-//  const name = ref('');
-//  const date = ref('');
-//  const day = ref(1);
-//  const allmoney = ref(0);
+const count = ref('');
+const pay = ref('');
 
-//  const addzp = () => {
-//   if(name.value && date.value && day.value && allmoney.value) {
-//  zps.value.push({
-//   id: Date.now(),
-//    name:name.value,
-//    date: date.value,
-//    day:day.value,
-//    allmoney:allmoney.value,
-//  });
-//   }
-// }
 
-// const removezp = (id) => {
-//   zps.value = zps.value.filter((zp) => zp.id !=id);
-// }
+const employee = () => {
+  if (name.value && date.value && count.value && pay.value) {
+    employees.value.push(
+      {
+  
+  id: Date.now(),
+  name: name.value,
+  date: (new Date(date.value)).toLocaleDateString(),
+  count: count.value,
+  pay: pay.value,
+}
+    );
+  }
+}
 
-// const totalSum = computed(() => {
-//   return zps.value.reduce((sum, zp) => sum + (product.allmoney * product.day), 0 )
-// });
+const removeEmp = (id) => {
+  employees.value = employees.value.filter((employee) => employee.id != id)
+}
+
+
+const totalSum = computed(() => {
+  return employees.value.reduce((sum, employee) => sum + (employee.pay), 0)
+})
+
 </script>
 
 <template>
-  <div class="container">
-    <div class="row">
-    <div class="col">
-      <h1 class="text-center my-3"></h1>
-      <div class="mb-3">
-        <label for="name" class="form-label">ФИО</label>
-        <input type="text" v-model="name" class="form-control" :class="{'is-invalid': !name}" id="name">
-        <div class="invalid-feedback">
-        Введите ваше ФИО!
+ <div class="row">
+      <div class="col">
+        <h1 class="text-center my-3">Учет заработной платы</h1>
+        <form action="">     
+          <div class="mx-5">
+            <label for="name" class="form-label">Ф.И.О сотрудника</label>
+            <input type="text" v-model="name" class="form-control" :class="{'is-invalid' : !name}" id="name">
+            <div class="invalid-feedback">
+       Заполните поле.
+      </div>
+            </div>
+            <div class="mx-5">
+            <label for="date" class="form-label">Дата выдачи зарплаты</label>
+            <input type="date" v-model="date" class="form-control" :class="{'is-invalid' : !date}" id="date">
+            <div class="invalid-feedback">
+        Заполните пожалуйста дату.
+      </div>
+            </div>
+            <div class="mx-5">
+            <label for="count" class="form-label">Количество отработанных дней </label>
+            <input type="number" v-model="count" class="form-control" :class="{'is-invalid' : !count}" id="count">
+            <div class="invalid-feedback">
+        Заполинте Количество отработанных дней.
+      </div>
+            </div>
+            <div class="mx-5">
+            <label for="pay" class="form-label">Размер заработной платы сотрудника</label>
+            <input type="number" v-model="pay" class="form-control" :class="{'is-invalid' : !pay}"  id="pay">
+            <div class="invalid-feedback">
+        Укажите размер заработной платы сотрудника.
+      </div>
+            </div>
+            <div class="mx-5 text-center">
+              <button @click="employee" type="button" class="btn btn-outline-danger">Добавить</button>
+            </div>
+        </form>
       </div>
     </div>
-    <div class="mb-3">
-        <label for="date" class="form-label">Дата выдачи зарплаты</label>
-        <input type="date" v-model="date" class="form-control" :class="{'is-invalid': !date}" id="date">
-        <div class="invalid-feedback">
-        Заполните дату выдачи з/п!
-      </div>
-    </div>
-    <div class="mb-3">
-        <label for="day" class="form-label">Количество отработанных дней</label>
-        <input type="text" v-model="day" class="form-control" :class="{'is-invalid': !day}" id="day">
-        <div class="invalid-feedback">
-        Введите количество отработанных дней!
-      </div>
-    </div>
-    <div class="mb-3">
-        <label for="allmoney" class="form-label">Размер заработной платы</label>
-        <input type="text" v-model="allmoney" class="form-control" :class="{'is-invalid': !allmoney}" id="allmoney">
-        <div class="invalid-feedback">
-        Введите размер заработной платы
-      </div>
-    </div>
-    <button @click="addzp" type="button" class="btn btn-outline-success">Добавить</button>
-    </div>
-  </div>
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-  <div class="col" v-for="employee in employees" :key="employee.id">
+
+
+
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+  <div class="col" v-for="(employee, index) in employees" :key="employee.id">
     <div class="card h-100">
      
-      <div class="card-body">
+      <div class="card-body text-center mx-5">
         <h5 class="card-title">Ф.И.О. сотрудника:</h5>
-       <p class="card-text "> {{ employee.name }}</p>
+       <p class="card-text ">  {{ index + 1 }}. {{ employee.name }}</p>
        <h5 class="card-title">Дата выдачи зарплаты:</h5>
         <p class="card-text">{{employee.date}}</p>
         <h5 class="card-title">Количество отработанных дней:</h5>
@@ -114,6 +123,16 @@ const allmoney = ref('');
       </div>
     </div>
   </div>
+  
+    </div>
+    <div class="row my-4">
+  <div class="col">
+    <h3 class="text-center">Общая сумма без налоговых отчислений: {{ totalSum }}</h3>
+  </div>
+</div>
+<div class="row my-4">
+  <div class="col">
+    <h3 class="text-center">Общая сумма с налоговыми отчислениями: {{ (totalSum * 0.85).toFixed(2) }}</h3>
   </div>
 </div>
 
